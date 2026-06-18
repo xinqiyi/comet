@@ -18,6 +18,14 @@
 
 新增 `review_mode: off|standard|thorough`，用于控制 Build / Verify 阶段的自动代码审查强度；full workflow 在离开 Build 前必须选择模式，hotfix/tweak 默认 `off`。项目级 `.comet/config.yaml` 也可配置默认值，新建 full workflow change 时会快照到 `.comet.yaml`。
 
+| 模式 | 审查强度 | 含义 | 适用场景 |
+| --- | --- | --- | --- |
+| `off` | 最低 | 不自动派发代码审查、reviewer 或 review-fix agent；任务完成依赖实现者自测、构建/测试证据、工作树确认和 task 勾选验证。 | 文档、配置、文案、小范围低风险改动；hotfix/tweak 默认值。 |
+| `standard` | 中等 | 所有任务完成后运行一次最终轻量代码审查，只检查正确性、安全和边界条件；CRITICAL/IMPORTANT 问题最多自动修复并复查 1 轮，仍未通过则交给用户决策。 | 默认推荐，适合大多数普通功能或修复。 |
+| `thorough` | 最高 | 按批次或风险边界运行合并审查，最后再运行一次完整审查；批次审查和最终审查各最多 2 轮审查-修复，仍未通过则暂停交给用户。 | 高风险、多模块、架构或安全相关改动。 |
+
+`review_mode: off` 只跳过自动代码审查，不跳过构建、测试、安全检查或异常调试协议。
+
 ### 其他
 
 - `comet init` 检测 Codex 插件缓存中已安装的 Superpowers（`~/.codex/plugins/cache/...`），避免重复安装（[#115](https://github.com/rpamis/comet/pull/115)）。
